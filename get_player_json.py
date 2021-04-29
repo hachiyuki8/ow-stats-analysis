@@ -89,15 +89,15 @@ def checkAllTags(battletags, output):
 
 if __name__ == "__main__":
     """ Write a dictionary of JSON object containing player's competitive rating (ELO) and hero 
-        statistics in PLAYER_JSON for every battletag in BATTLETAGS with valid information.
+        statistics to PLAYER_JSON for every battletag in BATTLETAGS with valid information.
         BATTLETAG_PROGRESS will contain all battletags that have been checked.
 
         To avoid scraping the same battletags across multiple runs, BATTLETAGS should not contain
         any battletag in BATTLETAG_PROGRESS.
 
-        This program takes around 40 minutes to scrape 1000 battletags. User should scrape all the 
-        battletags provided in BATTLETAGS in patches, by specifying a disjoint index range for each 
-        run using START and END.
+        This program takes around 45 minutes to scrape 1000 battletags (on average 40% of the 
+        battletags have valid competitive stats). User should scrape all the battletags provided in
+        BATTLETAGS in patches, by specifying a disjoint index range each time using START and END.
 
         If it is interrupted and user wants to continue scraping instead of starting over, user 
         should first move on to the next [START, END) range, and rerun the program on the 
