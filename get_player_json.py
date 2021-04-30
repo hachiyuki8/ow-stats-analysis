@@ -13,8 +13,11 @@ RATE_LIMIT = 0.33 # time paused after each query to ovrstat.com
 INTERVAL = 25 # print the current scraping progress after every INTERVAL number of battletags
 ERROR_MSG = {-999: "Player not found", -2: "Private profile", -1: "No competitive ratings"}
 # only search for battletags within index range [START, END) in BATTLETAGS
-START = 0
-END = 10000
+# Joanna: 0-50000
+# Andrii: 50000-100000
+# Poojan: 100000-150000
+START = 20000
+END = 20050
 
 def getPlayerFromTag(battletag):
     """ Return a json object containing player stats for the given battletag.
@@ -69,7 +72,7 @@ def checkAllTags(battletags, output):
             status, ratings, compStats = getPlayerFromTag(battletag)
             if status < 0:
                 msg = ERROR_MSG[status]
-                print(f"[checkAllTags] Error querying {battletag} from ovrstat.com: {msg}")
+                print(f"...Error querying {battletag} from ovrstat.com: {msg}")
                 error_count += 1
             else:
                 playerDict = {"ratings": ratings, "compStats": compStats}
@@ -81,8 +84,7 @@ def checkAllTags(battletags, output):
                 battletag_count += 1
 
                 if (battletag_count % INTERVAL == 0):
-                    print(f"""[checkAllTags] Current progress: 
-                              {battletag_count}(valid)+{error_count}(error)/{len(battletags)}""")
+                    print(f"""[checkAllTags] Current progress: {battletag_count}(valid)+{error_count}(error)/{len(battletags)}""")
                 time.sleep(RATE_LIMIT) # rate limit per battletag
     
     return battletag_count
@@ -105,9 +107,11 @@ if __name__ == "__main__":
     """
     with open(PLAYER_JSON, "a+") as output:
         with open(BATTLETAGS, "r") as inFile:
+            # remove empty lines in input file
             allTags = [tag.strip() for tag in inFile.readlines()]
             allTags = [tag for tag in allTags if tag]
             print(f"[MAIN] Total number of input battletags: {len(allTags)}")
             print(f"...Checking battletags from index {START} to {END}")
             battletag_count = checkAllTags(allTags[START:END], output)
             print(f"[MAIN] Scraping done. Total number of battletags with valid stats: {battletag_count}")
+            exit()
