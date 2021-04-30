@@ -1,3 +1,1 @@
-*.txt filter=lfs diff=lfs merge=lfs -text
-battletags.txt filter=lfs diff=lfs merge=lfs -text
-player_json.txt filter=lfs diff=lfs merge=lfs -text
+
