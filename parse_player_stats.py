@@ -190,6 +190,7 @@ def storeStats(role, sr, playerStats, outputFile):
         if curHero not in heroList:
             continue
 
+
         # only check heroes with time played above TIME_THRESHOLD
         if "timePlayed" not in curStats["game"]:
             continue
@@ -207,11 +208,11 @@ def storeStats(role, sr, playerStats, outputFile):
             if statCategory in statsToKeep.keys():
                 for statName, stat in statDict.items():
                     if statName in statsToKeep[statCategory]:
-                        statsToSave[statName] = stat
-        
+                        statsToSave[statName] = stat 
+
         allStats[curHero] = statsToSave
     
-    outputFile.write(str(allStats) + "\n")
+    outputFile.write(json.dumps(allStats) + "\n")
     numHeroes = len(allStats) - 1
     return numHeroes
         
