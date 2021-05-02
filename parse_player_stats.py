@@ -2,9 +2,11 @@ import json
 import pandas as pd
 from get_player_json import PLAYER_JSON
 
-TANK_DATA = "tank_data.txt" # file name to store all tank data
-DAMAGE_DATA = "damage_data.txt" # file name to store all damage data
-SUPPORT_DATA = "support_data.txt" # file name to store all support data
+PLAYER_JSON = "temp.txt"
+
+TANK_DATA = "tanks/tank_data.txt" # file name to store all tank data
+DAMAGE_DATA = "damages/damage_data.txt" # file name to store all damage data
+SUPPORT_DATA = "supports/support_data.txt" # file name to store all support data
 PLAYER_INFO = PLAYER_JSON # file containing all player info scraped in get_player_json.py
 
 ROLES = ["tank", "damage", "support"]
@@ -14,6 +16,8 @@ TANK_LIST = ["dVa", "orisa", "reinhardt", "roadhog", "sigma", "winston", "wrecki
 DAMAGE_LIST = ["ashe", "bastion", "doomfist", "echo", "genji", "hanzo", "junkrat", "mccree", "mei", 
                "pharah", "reaper", "soldier76", "sombra", "symmetra", "torbjorn", "tracer", "widowmaker"]
 SUPPORT_LIST = ["ana", "baptiste", "brigitte", "lucio", "mercy", "moira", "zenyatta"]
+
+ROLES_LISTS = dict(zip(ROLES, [TANK_LIST, DAMAGE_LIST, SUPPORT_LIST]))
 
 # lists of statistics for each role
 TANK_AVERAGE = ["barrierDamageDoneAvgPer10Min", "criticalHitsAvgPer10Min", "deathsAvgPer10Min", 
@@ -106,6 +110,10 @@ for support in SUPPORT_LIST:
                               "combat": SUPPORT_COMBAT, 
                               "heroSpecific": SUPPORT_HERO_SPECIFIC[support]}
 
+
+ROLES_STATS = dict(zip(ROLES, [TANK_STATS, DAMAGE_STATS, SUPPORT_STATS]))
+
+
 ALL_SRS = {"tank": [], "damage": [], "support": []}
 ALL_RANKS = {"tank": 0, "damage": 0, "support": 0}
 TIME_THRESHOLD = 3600 # only keep statistics for heroes with time played above this many seconds
@@ -157,7 +165,7 @@ def formatDuration(timeStr):
         sec += int(timeLst[-3]) * 3600
     return sec
 
-def storeStats(role, sr, playerStats, outputFile, heroList, heroStats):
+def storeStats(role, sr, playerStats, outputFile):
     """
     args:
         role: a string, tank, damage, or support
@@ -173,6 +181,10 @@ def storeStats(role, sr, playerStats, outputFile, heroList, heroStats):
 
     allStats = dict()
     allStats["rating"] = sr
+
+    heroList = ROLES_LISTS[role]
+    heroStats = ROLES_STATS[role]
+
     for curHero, curStats in playerStats.items():
         # only check heroes for the current role
         if curHero not in heroList:
@@ -224,6 +236,9 @@ def separateDataByRole(allPlayers, tankOutput, damageOutput, supportOutput):
     """
     playerCount = 0
     with open(tankOutput, "a+") as tankFile, open(damageOutput, "a+") as damageFile, open(supportOutput, "a+") as supportFile:
+
+        roleFiles = dict(zip(ROLES, [tankFile, damageFile, supportFile]))
+
         for player in allPlayers:
             player = json.loads(player)
             # extract player's SR(s)
@@ -235,13 +250,9 @@ def separateDataByRole(allPlayers, tankOutput, damageOutput, supportOutput):
                     continue
 
                 ALL_SRS[curRole].append(curLevel)
-                numTanks, numDamages, numSupports = 0, 0, 0
-                if curRole == "tank":
-                    numTanks = storeStats(curRole, curLevel, player["compStats"], tankFile, TANK_LIST, TANK_STATS)
-                elif curRole == "damage":
-                    numDamages = storeStats(curRole, curLevel, player["compStats"], damageFile, DAMAGE_LIST, DAMAGE_STATS)
-                else:
-                    numSupports = storeStats(curRole, curLevel, player["compStats"], supportFile, SUPPORT_LIST, SUPPORT_STATS)
+
+                numRoles = dict(zip(ROLES, [0, 0, 0]))
+                numRoles[curRole] += storeStats(curRole, curLevel, player["compStats"], roleFiles[curRole])
 
             playerCount += 1
 

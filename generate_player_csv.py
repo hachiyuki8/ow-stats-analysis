@@ -10,3 +10,5 @@ SUPPORT_DATA_FOLDER = "/supports"
 
 # TO-DO: flatten the dictionary
 # TO-DO: produce one csv file for each role
+
+from parse_player_stats import ROLES_LISTS, ROLES_STATS
