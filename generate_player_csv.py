@@ -9,9 +9,9 @@ from parse_player_stats import TANK_DATA, DAMAGE_DATA, SUPPORT_DATA
 # path to the folder with text files storing player data for each role
 # files in these folders are outputs from parse_player_stats.py and
 # contain data in a nested dictionary form that needs to be flattened
-TANK_DATA_FOLDER = "tanks/" 
-DAMAGE_DATA_FOLDER = "damages/"
-SUPPORT_DATA_FOLDER = "supports/"
+TANK_DATA_FOLDER = "parsed_stats/" 
+DAMAGE_DATA_FOLDER = "parsed_stats/"
+SUPPORT_DATA_FOLDER = "parsed_stats/"
 
 ROLES_FOLDERS = dict(zip(ROLES, [TANK_DATA_FOLDER, DAMAGE_DATA_FOLDER, SUPPORT_DATA_FOLDER]))
 
@@ -30,7 +30,7 @@ INTERVAL = 500
 # from https://stackoverflow.com/questions/23981553/get-all-values-from-nested-dictionaries-in-python
 
 def NestedDictValues(dictionary):
-    """ returns a list of values from a nested dictionary as a list
+    """ Returns a list of values from a nested dictionary as a list
     """
     for value in dictionary.values():
         if isinstance(value, dict):
@@ -65,7 +65,7 @@ def get_attributes(role):
 
 
 def generate_df(role):
-    """ parses all rows in role_DATA and puts in flattened DataFrame
+    """ Parses all rows in role_DATA and puts in flattened DataFrame
 
     args:
         role -- role for which to create df

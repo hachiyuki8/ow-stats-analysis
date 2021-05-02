@@ -118,6 +118,8 @@ ALL_RANKS = {"tank": 0, "damage": 0, "support": 0}
 TIME_THRESHOLD = 3600 # only keep statistics for heroes with time played above this many seconds
 INTERVAL = 1000 # print the current scraping progress after every INTERVAL number of players
 
+DEBUG = 0
+
 def srToRank(sr):
     """ Map an sr to the corresponding rank
 
@@ -216,8 +218,10 @@ def storeStats(role, sr, playerStats, outputFile):
 
         allStats[curHero] = statsToSave
     
-    outputFile.write(json.dumps(allStats) + "\n")
     numHeroes = len(allStats) - 1
+    if numHeroes:
+        outputFile.write(json.dumps(allStats) + "\n")
+    
     return numHeroes
         
 def separateDataByRole(allPlayers, tankOutput, damageOutput, supportOutput):
@@ -240,7 +244,7 @@ def separateDataByRole(allPlayers, tankOutput, damageOutput, supportOutput):
         player_count: total number of players processed
     """
     playerCount = 0
-    with open(tankOutput, "w+") as tankFile, open(damageOutput, "w+") as damageFile, open(supportOutput, "w+") as supportFile:
+    with open(tankOutput, "a+") as tankFile, open(damageOutput, "a+") as damageFile, open(supportOutput, "a+") as supportFile:
 
         roleFiles = dict(zip(ROLES, [tankFile, damageFile, supportFile]))
 
@@ -251,9 +255,7 @@ def separateDataByRole(allPlayers, tankOutput, damageOutput, supportOutput):
                 print("[separateDataByRole] Failed to decode JSON")
                 continue
 
-            # skip players with no comp stats (didn't play any hero long enough)
             if "compStats" not in player.keys():
-                print(player)
                 continue
 
             # extract player's SR(s)
