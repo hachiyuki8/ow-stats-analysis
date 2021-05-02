@@ -1,13 +1,12 @@
 import json
+import os
 import pandas as pd
-from get_player_json import PLAYER_JSON
 
-PLAYER_JSON = "temp.txt"
-
-TANK_DATA = "tanks/tank_data.txt" # file name to store all tank data
-DAMAGE_DATA = "damages/damage_data.txt" # file name to store all damage data
-SUPPORT_DATA = "supports/support_data.txt" # file name to store all support data
-PLAYER_INFO = PLAYER_JSON # file containing all player info scraped in get_player_json.py
+TANK_DATA = "parsed_stats/tank_data.txt" # file name to store all tank data
+DAMAGE_DATA = "parsed_stats/damage_data.txt" # file name to store all damage data
+SUPPORT_DATA = "parsed_stats/support_data.txt" # file name to store all support data
+SR_RANK_INFO = "parsed_stats/sr_rank_info.txt" # file name to store SR and rank info
+PLAYER_INFO_FOLDER = os.getcwd() + "/raw_stats/" # folder containing all player info scraped in get_player_json.py
 
 ROLES = ["tank", "damage", "support"]
 RANKS = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Masters", "Grandmaster"]
@@ -186,15 +185,20 @@ def storeStats(role, sr, playerStats, outputFile):
     heroStats = ROLES_STATS[role]
 
     for curHero, curStats in playerStats.items():
+        if not curHero or not curStats:
+            continue
+
         # only check heroes for the current role
         if curHero not in heroList:
             continue
 
-
         # only check heroes with time played above TIME_THRESHOLD
-        if "timePlayed" not in curStats["game"]:
-            continue
-        elif formatDuration(curStats["game"]["timePlayed"]) < TIME_THRESHOLD:
+        try:
+            if "timePlayed" not in curStats["game"]:
+                continue
+            elif formatDuration(curStats["game"]["timePlayed"]) < TIME_THRESHOLD:
+                continue
+        except:
             continue
 
         statsToSave = dict()
@@ -236,12 +240,22 @@ def separateDataByRole(allPlayers, tankOutput, damageOutput, supportOutput):
         player_count: total number of players processed
     """
     playerCount = 0
-    with open(tankOutput, "a+") as tankFile, open(damageOutput, "a+") as damageFile, open(supportOutput, "a+") as supportFile:
+    with open(tankOutput, "w+") as tankFile, open(damageOutput, "w+") as damageFile, open(supportOutput, "w+") as supportFile:
 
         roleFiles = dict(zip(ROLES, [tankFile, damageFile, supportFile]))
 
         for player in allPlayers:
-            player = json.loads(player)
+            try:
+                player = json.loads(player)
+            except:
+                print("[separateDataByRole] Failed to decode JSON")
+                continue
+
+            # skip players with no comp stats (didn't play any hero long enough)
+            if "compStats" not in player.keys():
+                print(player)
+                continue
+
             # extract player's SR(s)
             for srInfo in player["ratings"]:
                 curLevel = srInfo["level"]
@@ -265,18 +279,27 @@ def separateDataByRole(allPlayers, tankOutput, damageOutput, supportOutput):
     return playerCount
 
 if __name__ == "__main__":
-    with open(PLAYER_INFO, "r") as inFile:
-        allPlayers = inFile.readlines()
-        print(f"Total number of players in the input file: {len(allPlayers)}")
-        playerCount = separateDataByRole(allPlayers, TANK_DATA, DAMAGE_DATA, SUPPORT_DATA)
+    for file in os.listdir(PLAYER_INFO_FOLDER):
+        if file.endswith(".txt"):
+            filePath = PLAYER_INFO_FOLDER + file
+            with open(filePath, "r") as inFile:
+                print(f"[checkAllFiles] Successfully opened {file}")
+                allPlayers = inFile.readlines()
+                print(f"Total number of players in the input file: {len(allPlayers)}")
+                playerCount = separateDataByRole(allPlayers, TANK_DATA, DAMAGE_DATA, SUPPORT_DATA)
 
-        # map SRs to ranks for each role
-        for role, sr in ALL_SRS.items():
-            sr = pd.Series(sr)
-            rank = sr.map(srToRank).astype("category").cat.reorder_categories(RANKS)
-            ALL_RANKS[role] = rank
+    # map SRs to ranks for each role
+    for role, sr in ALL_SRS.items():
+        sr = pd.Series(sr)
+        rank = sr.map(srToRank).astype("category").cat.reorder_categories(RANKS)
+        ALL_RANKS[role] = rank
 
-        # show rank distribution for each role
-        for role, rank in ALL_RANKS.items():
-            print(f"Rank distribution (percentage) of {role} from a total of {len(ALL_RANKS[role])} players:")
-            print(round(rank.groupby(rank).count()/len(rank)*100, 1))
+    # show rank distribution for each role
+    for role, rank in ALL_RANKS.items():
+        contingency = rank.groupby(rank).count()/len(rank)*100
+        print(f"Rank distribution (percentage) of {role} from a total of {len(ALL_RANKS[role])} players:")
+        print(round(contingency, 1))
+
+    # save SR and rank data
+    with open(SR_RANK_INFO, "w") as output:
+        output.write(str(ALL_SRS) + "\n" + str(ALL_RANKS))
