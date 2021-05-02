@@ -16,8 +16,8 @@ ERROR_MSG = {-999: "Player not found", -2: "Private profile", -1: "No competitiv
 # Joanna: 0-50000
 # Andrii: 50000-100000
 # Poojan: 100000-150000
-START = 20000
-END = 20050
+START = 0
+END = 0
 
 def getPlayerFromTag(battletag):
     """ Return a json object containing player stats for the given battletag.

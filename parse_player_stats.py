@@ -1,13 +1,11 @@
 import json
 import pandas as pd
-import seaborn as sns
 from get_player_json import PLAYER_JSON
 
 TANK_DATA = "tank_data.txt" # file name to store all tank data
 DAMAGE_DATA = "damage_data.txt" # file name to store all damage data
 SUPPORT_DATA = "support_data.txt" # file name to store all support data
 PLAYER_INFO = PLAYER_JSON # file containing all player info scraped in get_player_json.py
-PLAYER_INFO = "test.txt"
 
 ROLES = ["tank", "damage", "support"]
 RANKS = ["Bronze", "Silver", "Gold", "Platinum", "Diamond", "Masters", "Grandmaster"]
@@ -246,7 +244,6 @@ def separateDataByRole(allPlayers, tankOutput, damageOutput, supportOutput):
                     numSupports = storeStats(curRole, curLevel, player["compStats"], supportFile, SUPPORT_LIST, SUPPORT_STATS)
 
             playerCount += 1
-            # print(f"...Number of heroes with valid stats: {numTanks} tanks, {numDamages} damages, {numSupports} supports")
 
             if playerCount % INTERVAL == 0:
                 print(f"[separateDataByRole] Current number of players added: {playerCount}/{len(allPlayers)}")
