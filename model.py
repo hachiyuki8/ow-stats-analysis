@@ -11,9 +11,7 @@ from parse_player_stats import ROLES
 
 # Train a random forest model
 def randomForest(train_X, train_y, test_X, test_y):
-    print("\n\n")
-    print(f"###Random Forest###")
-    print("\n")
+    print(f"\n###Random Forest###\n")
     
     '''Cross Validation'''
     n_estimators = [int(x) for x in np.linspace(start = 500, stop = 2000, num = 100)]
@@ -31,7 +29,8 @@ def randomForest(train_X, train_y, test_X, test_y):
                    'bootstrap': bootstrap       
                   }
     rf = RandomForestRegressor(random_state = 69)
-    rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 200, cv = 5, verbose = 1, random_state = 69, n_jobs = -1)
+    rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 10, cv = 5, 
+                                   verbose = 2, random_state = 69, n_jobs = -1, pre_dispatch = "2 * n_jobs")
     rf_random.fit(train_X, train_y)
     pred = rf_random.predict(test_X)
     rf_best_params = rf_random.best_params_
@@ -43,9 +42,7 @@ def randomForest(train_X, train_y, test_X, test_y):
 
 # Train a gradient boosting model
 def gradientboosting(train_X, train_y, test_X, test_y):
-    print("\n\n")
-    print(f"###Gradient Boosting###")
-    print("\n")
+    print(f"\n###Gradient Boosting###\n")
 
     '''Cross validation'''
     n_estimators = [int(x) for x in np.linspace(start = 500, stop = 2000, num = 100)]
@@ -63,7 +60,8 @@ def gradientboosting(train_X, train_y, test_X, test_y):
                    'learning_rate': learning_rate       
                   }
     gb = GradientBoostingRegressor(random_state = 69)
-    gb_random = RandomizedSearchCV(estimator = gb, param_distributions = random_grid, n_iter = 200, cv = 5, verbose = 1, random_state = 69, n_jobs = -1)
+    gb_random = RandomizedSearchCV(estimator = gb, param_distributions = random_grid, n_iter = 10, cv = 5, 
+                                   verbose = 2, random_state = 69, n_jobs = -1, pre_dispatch = "2 * n_jobs")
     gb_random.fit(train_X, train_y)
     pred = gb_random.predict(test_X)
     gb_best_params = gb_random.best_params_
@@ -75,9 +73,7 @@ def gradientboosting(train_X, train_y, test_X, test_y):
 
 # Train a KNN model
 def KNN(train_X, train_y, test_X, test_y):
-    print("\n\n")
-    print(f"###KNN###")
-    print("\n")
+    print(f"\n###KNN###\n")
 
     n_neighbors = [int(x) for x in np.linspace(start = 5, stop = 50, num = 10)]
     weights = ['uniform', 'distance']
@@ -94,7 +90,8 @@ def KNN(train_X, train_y, test_X, test_y):
     train_X_scaled = scaler.fit_transform(train_X)
     test_X_scaled = scaler.transform(test_X)
     knn = KNeighborsRegressor()
-    knn_random = RandomizedSearchCV(estimator = knn, param_distributions = random_grid, n_iter = 200, cv = 5, verbose = 1, random_state = 69, n_jobs = -1)
+    knn_random = RandomizedSearchCV(estimator = knn, param_distributions = random_grid, n_iter = 10, cv = 5, 
+                                    verbose = 2, random_state = 69, n_jobs = -1, pre_dispatch = "2 * n_jobs")
     knn_random.fit(train_X_scaled, train_y)
     pred = knn_random.predict(test_X_scaled)
     knn_best_params = knn_random.best_params_
@@ -126,6 +123,8 @@ if __name__ == "__main__":
             "support": (support_train_X, support_train_y, support_test_X, support_test_y)}
 
     for role in ROLES:
+        print(f"\n###STARTING FOR ROLE: {role}###\n")
+
         rf_best_model, rf_mse = randomForest(*data[role])
         gb_best_model, gb_mse = gradientboosting(*data[role])
         knn_best_model, knn_mse = KNN(*data[role])

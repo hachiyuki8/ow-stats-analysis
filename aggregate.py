@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import math
 import pickle
+from sklearn.impute import SimpleImputer
 
 from parse_player_stats import ROLES, ROLES_LISTS
 
@@ -117,11 +118,15 @@ def aggregate(df, role):
         if missing > THRESHOLD:
             new_df = new_df.drop(col, axis = 1)
             
-    # fill missing values with 0
-    new_df.fillna(0, inplace = True)
+    # fill missing values with median
+    imp = SimpleImputer(missing_values = np.nan, strategy = "median")
+    temp = pd.DataFrame(imp.fit_transform(new_df))
+    temp.columns = new_df.columns
+    temp.index = new_df.index
+
     # split the data frame into predictors and response
-    X = new_df.drop("rating", axis = 1)
-    y = new_df["rating"]
+    X = temp.drop("rating", axis = 1)
+    y = temp["rating"]
 
     return X, y
 
