@@ -105,7 +105,7 @@ def aggregate(df, role):
     
     return:
         X: a data frame of predictors (features, aggregated)
-        y: pd.series of response
+        y: pd.series of the response variable (rating)
     """
 
     aggregated = df.apply(aggregate_by_role, role = "tank", axis = 1)
