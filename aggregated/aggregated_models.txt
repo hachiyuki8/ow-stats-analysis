@@ -1,0 +1,35 @@
+# TANK
+[RandomForestRegressor(bootstrap=False, ccp_alpha=0.0, criterion='mse', max_depth=33, max_features='sqrt', max_leaf_nodes=None, max_samples=None, 
+                       min_impurity_decrease=0.0, min_impurity_split=None, min_samples_leaf=1, min_samples_split=5, min_weight_fraction_leaf=0.0, 
+                       n_estimators=1419, n_jobs=None, oob_score=False, random_state=69, verbose=0, warm_start=False), 
+ 244123.16048430157, 
+ GradientBoostingRegressor(alpha=0.9, ccp_alpha=0.0, criterion='friedman_mse', init=None, learning_rate=0.01, loss='ls', max_depth=17, max_features='sqrt', max_leaf_nodes=None, 
+                           min_impurity_decrease=0.0, min_impurity_split=None, min_samples_leaf=1, min_samples_split=10, min_weight_fraction_leaf=0.0,
+                           n_estimators=742, n_iter_no_change=None, presort=None, random_state=69, subsample=1.0, tol=0.0001, validation_fraction=0.1, verbose=0, warm_start=False), 
+ 244887.39789141578, 
+ KNeighborsRegressor(algorithm='ball_tree', leaf_size=64, metric='minkowski', metric_params=None, n_jobs=None, n_neighbors=40, p=2, weights='distance'), 
+ 251571.78548830753]
+
+# DAMAGE
+[RandomForestRegressor(bootstrap=False, ccp_alpha=0.0, criterion='mse', max_depth=33, max_features='sqrt', max_leaf_nodes=None, max_samples=None, 
+                       min_impurity_decrease=0.0, min_impurity_split=None, min_samples_leaf=1, min_samples_split=5, min_weight_fraction_leaf=0.0,
+                       n_estimators=1419, n_jobs=None, oob_score=False, random_state=69, verbose=0, warm_start=False), 
+ 250032.93578668233, 
+ GradientBoostingRegressor(alpha=0.9, ccp_alpha=0.0, criterion='friedman_mse', init=None, learning_rate=0.01, loss='ls', max_depth=41, max_features='sqrt', max_leaf_nodes=None, 
+                           min_impurity_decrease=0.0, min_impurity_split=None, min_samples_leaf=4, min_samples_split=10, min_weight_fraction_leaf=0.0,
+                           n_estimators=1449, n_iter_no_change=None, presort=None, random_state=69, subsample=1.0, tol=0.0001, validation_fraction=0.1, verbose=0, warm_start=False), 
+ 247365.3741125667, 
+ KNeighborsRegressor(algorithm='kd_tree', leaf_size=10, metric='minkowski', metric_params=None, n_jobs=None, n_neighbors=25, p=1, weights='distance'), 
+ 269458.98917060153]
+
+# SUPPORT
+[RandomForestRegressor(bootstrap=False, ccp_alpha=0.0, criterion='mse', max_depth=64, max_features='sqrt', max_leaf_nodes=None, max_samples=None, 
+                       min_impurity_decrease=0.0, min_impurity_split=None, min_samples_leaf=1, min_samples_split=2, min_weight_fraction_leaf=0.0,
+                       n_estimators=994, n_jobs=None, oob_score=False, random_state=69, verbose=0, warm_start=False), 
+ 272529.0814005239, 
+ GradientBoostingRegressor(alpha=0.9, ccp_alpha=0.0, criterion='friedman_mse', init=None, learning_rate=0.01, loss='ls', max_depth=17, max_features='sqrt', max_leaf_nodes=None, 
+                           min_impurity_decrease=0.0, min_impurity_split=None, min_samples_leaf=1, min_samples_split=10, min_weight_fraction_leaf=0.0,
+                           n_estimators=742, n_iter_no_change=None, presort=None, random_state=69, subsample=1.0, tol=0.0001, validation_fraction=0.1, verbose=0, warm_start=False), 
+ 270516.3864121574, 
+ KNeighborsRegressor(algorithm='ball_tree', leaf_size=33, metric='minkowski', metric_params=None, n_jobs=None, n_neighbors=35, p=1, weights='distance'), 
+ 285994.1570905974]
