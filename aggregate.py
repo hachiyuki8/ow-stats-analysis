@@ -4,7 +4,7 @@ import math
 import pickle
 from sklearn.impute import SimpleImputer
 
-from parse_player_stats import ROLES, ROLES_LISTS
+from parse_player_stats import ROLES
 
 DATA_PATH = "test_train/"
 TANK_STATS = ["barrierDamageDoneAvgPer10Min", "criticalHitsAvgPer10Min", "deathsAvgPer10Min", 
