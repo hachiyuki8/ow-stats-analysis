@@ -38,7 +38,7 @@ if __name__ == "__main__":
     fig, ax = plt.subplots()
     fig.tight_layout()
     ax.boxplot(tank_result.importances[tank_idx].T, vert=False, labels=tank_test_X.columns[tank_idx])
-    ax.set_title("[TANK] Permutation Feature Importances (on Train Set)")
+    ax.set_title("[TANK] Permutation Feature Importances (on Test Set)")
 
     damage_gb = GradientBoostingRegressor(alpha=0.9, ccp_alpha=0.0, criterion='friedman_mse', init=None, learning_rate=0.01, loss='ls', max_depth=41, max_features='sqrt', max_leaf_nodes=None, 
                                           min_impurity_decrease=0.0, min_impurity_split=None, min_samples_leaf=4, min_samples_split=10, min_weight_fraction_leaf=0.0,

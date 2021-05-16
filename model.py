@@ -29,7 +29,7 @@ def randomForest(train_X, train_y, test_X, test_y):
                    'bootstrap': bootstrap       
                   }
     rf = RandomForestRegressor(random_state = 69)
-    rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 10, cv = 5, 
+    rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 200, cv = 5, 
                                    verbose = 2, random_state = 69, n_jobs = -1, pre_dispatch = "2 * n_jobs")
     rf_random.fit(train_X, train_y)
     pred = rf_random.predict(test_X)
@@ -60,7 +60,7 @@ def gradientboosting(train_X, train_y, test_X, test_y):
                    'learning_rate': learning_rate       
                   }
     gb = GradientBoostingRegressor(random_state = 69)
-    gb_random = RandomizedSearchCV(estimator = gb, param_distributions = random_grid, n_iter = 10, cv = 5, 
+    gb_random = RandomizedSearchCV(estimator = gb, param_distributions = random_grid, n_iter = 200, cv = 5, 
                                    verbose = 2, random_state = 69, n_jobs = -1, pre_dispatch = "2 * n_jobs")
     gb_random.fit(train_X, train_y)
     pred = gb_random.predict(test_X)
@@ -90,7 +90,7 @@ def KNN(train_X, train_y, test_X, test_y):
     train_X_scaled = scaler.fit_transform(train_X)
     test_X_scaled = scaler.transform(test_X)
     knn = KNeighborsRegressor()
-    knn_random = RandomizedSearchCV(estimator = knn, param_distributions = random_grid, n_iter = 10, cv = 5, 
+    knn_random = RandomizedSearchCV(estimator = knn, param_distributions = random_grid, n_iter = 200, cv = 5, 
                                     verbose = 2, random_state = 69, n_jobs = -1, pre_dispatch = "2 * n_jobs")
     knn_random.fit(train_X_scaled, train_y)
     pred = knn_random.predict(test_X_scaled)
