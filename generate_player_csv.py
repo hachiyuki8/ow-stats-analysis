@@ -1,6 +1,8 @@
 import json
 import pandas as pd
 import numpy as np
+from io import StringIO
+from csv import writer  
 
 from parse_player_stats import ROLES_LISTS, ROLES_STATS, ROLES
 from parse_player_stats import TANK_DATA, DAMAGE_DATA, SUPPORT_DATA
@@ -76,9 +78,11 @@ def generate_df(role):
 
     attributes, attributes_nested = get_attributes(role)
 
-    df = pd.DataFrame(columns = attributes)
-
+    # df = pd.DataFrame(columns = attributes)
+    output = StringIO()
+    csv_writer = writer(output)
     with open(ROLES_DATA[role], "r") as infile:
+        
         for i, line in enumerate(infile):
 
             if i % INTERVAL == 0:
@@ -106,7 +110,11 @@ def generate_df(role):
                         else:
                             values_line.append(np.nan)
 
-            df.loc[i] = values_line
+            csv_writer.writerow(values_line)
+            # df.loc[i] = values_line
+
+    output.seek(0)
+    df = pd.read_csv(output, names=attributes)
 
     return df
 
